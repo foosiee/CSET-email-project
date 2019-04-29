@@ -75,18 +75,23 @@ def handle():
 @app.route("/login_auth", methods = ['POST'])
 def login():
     if request.form:
-        password = request.form.get("psw")
-        password = hashlib.sha256(password.encode()).hexdigest()
-        username = request.form.get("uname")
+        try:
+            password = request.form.get("psw")
+            password = hashlib.sha256(password.encode()).hexdigest()
+            username = request.form.get("uname")
 
-        user = User.query.filter_by(username=username).first()
-        if(user.password == password):
-            user = jsonpickle.encode(user)
-            session["user"] = user
-            return redirect(url_for('.emailViewer', user=user))
-        else:
-            error = "Incorrect password"
+            user = User.query.filter_by(username=username).first()
+            if(user.password == password):
+                user = jsonpickle.encode(user)
+                session["user"] = user
+                return redirect(url_for('.emailViewer', user=user))
+            else:
+                error = "Incorrect password"
+                return render_template("index.html",error=error)
+        except:
+            error="Incorrect password or username"
             return render_template("index.html",error=error)
+
 
 
 @app.route("/email", methods= ['GET','POST'])
