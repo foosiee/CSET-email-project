@@ -86,7 +86,7 @@ def login():
                 session["user"] = user
                 return redirect(url_for('.emailViewer', user=user))
             else:
-                error = "Incorrect password"
+                error = "Incorrect password or username"
                 return render_template("index.html",error=error)
         except:
             error="Incorrect password or username"
