@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="{{ url_for('static',filename='js/script.js') }}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+</head>
+
+<style>
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+    
+    td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+    
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+</style>
+
+<body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+                <a class="navbar-brand" href="#">EmailViewer</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                  <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                      <a class="nav-link" id="headingOne" href="#collapseOne" role="button" data-toggle="collapse" aria-expanded="true" aria-controls="collapseOne">Email History</a>
+
+                    </li>
+                    <li class="nav-item active">
+                      <a class="nav-link" id="headingTwo" href="#collapseTwo" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="collapseTwo">Compose New</a>
+                    </li>
+                    <li class="nav-item active">
+                      <a class="nav-link" id="headingThree" href="#collapseThree" role="button" data-toggle="collapse" aria-expanded="false" aria-controls="collapseThree" href="/">Log Out</a>
+                    </li>
+                  </ul>
+                </div>
+              </nav>
+              
+              <div id="accordionExample">
+                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                  {% if emails.count() == 0 %}
+                    <p>No Email History</p>
+                  {% else %}
+                    <table>
+                        <tr>
+                            <th>Number</th>
+                            <th>Recipient</th>
+                            <th>Subject</th>
+                            <th>Date Sent</th>
+                            <th>Actions</th>
+                        </tr>
+                        {% for email in emails %}
+                        <tr>
+                            <td>{{loop.index}}</td>
+                            <td>{{email.recipient}}</td>
+                            <td>{{email.subject}}</td> 
+                            <td>{{email.sent_time}}</td>
+                            <td>
+                                <form method="POST" action="/delete">
+                                    <input type="hidden" value="{{email.emailID}}" name="emailID">
+                                    <input type="submit" value="Delete">
+                                </form>
+                                <form method="POST" action="/print" target="_blank">
+                                    <input type="hidden" value="{{email.emailID}}" name="emailID">
+                                    <input type="submit" value="Print">
+                                </form>
+                                <form method="POST" action="/viewEmail" target="_blank">
+                                    <input type="hidden" value="{{email.emailID}}" name="emailID">
+                                    <input type="submit" value="View Email">
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </table>
+                  {% endif %}
+                </div>
+              
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                    <form action="/email_handler" method="POST">
+                        <div class="form-group">
+                            <label for="usr">Recipient Email:</label>
+                            <input type="email" class="form-control" name="emailTo" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="pwd">Subject:</label>
+                            <input type="text" class="form-control" name="subject" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="comment">Body:</label>
+                            <textarea class="form-control" rows="5" name="body" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-outline-secondary">Send Email</button>
+                    </form>
+                </div>
+              
+                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                        <a href="/logout"><button class="btn btn-outline-secondary">Log out</button></a>
+                </div>
+              </div>
+</body>
