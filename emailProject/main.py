@@ -43,7 +43,7 @@ def sendEmail(emailTo, subject, body):
     msg['To'] = emailTo
 
     server = smtplib.SMTP('smtp.gmail.com:587')
-    password = "BK8DTYx8UnrgyM2"
+    password = ""
 
     server.starttls()
     server.login(FROM,password)
