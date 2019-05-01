@@ -17,7 +17,7 @@ app.config["SQLALCHEMY_DATABASE_URI"] = database_file
 app.config["SQLALCHEMY_TRACK_MODIFICATION"] = False
 
 db = SQLAlchemy(app)
-PORT = 5556
+PORT = 5555
 
 class User(db.Model):
     #__tablename__ = 'users'
